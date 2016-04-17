@@ -1,0 +1,11 @@
+category product
+	- food & service
+	- perishables
+	- non-alcoholic & beverages
+	- non-food
+	- snack
+	- grocery
+	-confectionery
+	
+	http://www.malaysiatercinta.com/2015/04/senarai-barang-runcit-kena-gst.html
+	http://www.slrmag.co.uk/category-management-confectionery/

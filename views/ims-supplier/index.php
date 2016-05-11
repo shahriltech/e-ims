@@ -53,8 +53,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                            // 'ims_supplierId',
                             'ims_supplierName',
-                            'ims_supplierPhone',
-                            'ims_supplierAddress',
+                            //'ims_supplierPhone',
+                            //'ims_supplierAddress',
                             'ims_supplierEmail:email',
 
                             ['class' => 'yii\grid\ActionColumn'],

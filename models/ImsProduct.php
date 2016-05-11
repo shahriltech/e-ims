@@ -33,6 +33,13 @@ class ImsProduct extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            ['ims_productName', 'required', 'message' => 'Please Fill In Product Name'],
+            ['ims_categoryId', 'required', 'message' => 'Please Choose Category Product'],
+            ['ims_supplierId', 'required', 'message' => 'Please Choose Supplier/Vendor Name'],
+            ['ims_totalProductQty', 'required', 'message' => 'Please Fill In Total Quantity'],
+            ['ims_productPrice', 'required', 'message' => 'Please Fill In Product Price'],
+            ['ims_productDesc', 'required', 'message' => 'Please Fill In Product Description'],
+
             [['ims_productPrice'], 'number'],
             [['ims_totalProductQty', 'ims_categoryId', 'ims_supplierId'], 'integer'],
             [['ims_productName', 'ims_productDesc'], 'string', 'max' => 250],

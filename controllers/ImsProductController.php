@@ -8,6 +8,7 @@ use app\models\ImsProductSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\ImsSupplier;
 
 /**
  * ImsProductController implements the CRUD actions for ImsProduct model.
@@ -76,7 +77,11 @@ class ImsProductController extends Controller
             if ($model->save()) {
                 return $this->redirect(['index',]);
             }
-            
+            else{
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -130,5 +135,30 @@ class ImsProductController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    public function actionMenubox()
+    {
+        return $this->render('menubox');
+    }
+
+    public function actionListproduct($id)
+    {
+        $countPosts = ImsProduct::find()
+        ->where(['ims_supplierId' => $id])
+        ->count();
+         
+        $posts = ImsProduct::find() 
+        ->where(['ims_supplierId' => $id])
+        ->all();
+         
+        if($countPosts>0){
+            echo "<option value=''>--Please Choose--</option>";
+            foreach($posts as $post){
+                echo "<option value='".$post->ims_productId."'>".$post->ims_productName."</option>";
+            }
+        } else {
+                echo "<option>Not Found</option>";
+        }
+     
     }
 }

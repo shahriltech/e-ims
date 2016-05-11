@@ -23,6 +23,7 @@ class AppAsset extends AssetBundle
         'metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css',
         'metronic/assets/global/plugins/uniform/css/uniform.default.css',
         'metronic/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css',
+        'metronic/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
         'metronic/assets/global/plugins/morris/morris.css',
         'metronic/assets/global/css/components-md.min.css',
         'metronic/assets/global/css/plugins-md.min.css',
@@ -31,7 +32,7 @@ class AppAsset extends AssetBundle
         'metronic/assets/layouts/layout/css/themes/default.min.css',
         'metronic/assets/layouts/layout/css/custom.min.css',
         'metronic/assets/pages/css/login.min.css',
-
+        'metronic/assets/pages/css/invoice.min.css',
         'css/site.css',
     ];
     public $js = [

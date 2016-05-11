@@ -14,27 +14,82 @@ $supplier = ArrayHelper::map(ImsSupplier::find()->asArray()->all(), 'ims_supplie
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <span id="productCreate" class="<?php echo Yii::$app->controller->id."/".Yii::$app->controller->action->id;?>"></span>
+<?php $form = ActiveForm::begin(); ?>
+    <?= $form->errorSummary($model,['class'=>'alert alert-danger','header'=>'']); ?>
+    <div class="row">
+        <div class="portlet-body form">
+            <div class="form-body">
+                <div class="col-md-12">
+                    <div class="form-group form-md-line-input">
+                        <?= Html::activeTextInput($model,'ims_productName',['class'=>'form-control']); ?>
+                            <label for="form_control_1"><?= Html::activeLabel($model,'ims_productName'); ?> <span class="required">*</span></label>
+                            <span class="help-block"><?= Html::error($model,'ims_productName'); ?></span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="portlet-body form">
+            <div class="form-body">
+                <div class="col-md-6">
+                    <div class='form-group form-md-line-input'>
+                        <?= Html::activeDropDownList($model, 'ims_categoryId', $category, 
+                            [
+                                'prompt'=>'--Please Choose--',
+                                'class'=>'form-control',
 
-<div class="ims-product-form">
+                            ]); ?>
+                            <label for="form_control_1"><?= Html::activeLabel($model,'ims_categoryId'); ?> <span class="required">*</span></label>
+                            <span class="help-block"><?= Html::error($model,'ims_categoryId'); ?></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class='form-group form-md-line-input'>
+                        <?= Html::activeDropDownList($model, 'ims_supplierId', $supplier, 
+                            [
+                                'prompt'=>'--Please Choose--',
+                                'class'=>'form-control',
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?=$form->field($model, 'ims_categoryId')->dropDownList( $category, ['prompt'=>'--Please Choose Category--','class'=>'form-control',]); ?>
-    
-    <?=$form->field($model, 'ims_supplierId')->dropDownList( $supplier, ['prompt'=>'--Please Choose Supplier--','class'=>'form-control',]); ?>
-
-    <?= $form->field($model, 'ims_productName')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'ims_productPrice')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'ims_productDesc')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'ims_totalProductQty')->textInput() ?>
-
+                            ]); ?>
+                            <label for="form_control_1"><?= Html::activeLabel($model,'ims_supplierId'); ?> <span class="required">*</span></label>
+                            <span class="help-block"><?= Html::error($model,'ims_supplierId'); ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="portlet-body form">
+            <div class="form-body">
+                <div class="col-md-4">
+                    <div class="form-group form-md-line-input">
+                        <?= Html::activeTextInput($model,'ims_productPrice',['class'=>'form-control']); ?>
+                            <label for="form_control_1"><?= Html::activeLabel($model,'ims_productPrice'); ?> <span class="required">*</span></label>
+                            <span class="help-block"><?= Html::error($model,'ims_productPrice'); ?></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group form-md-line-input">
+                        <?= Html::activeTextInput($model,'ims_productDesc',['class'=>'form-control']); ?>
+                            <label for="form_control_1"><?= Html::activeLabel($model,'ims_productDesc'); ?> <span class="required">*</span></label>
+                            <span class="help-block"><?= Html::error($model,'ims_productDesc'); ?></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group form-md-line-input">
+                        <?= Html::activeTextInput($model,'ims_totalProductQty',['class'=>'form-control']); ?>
+                            <label for="form_control_1"><?= Html::activeLabel($model,'ims_totalProductQty'); ?> <span class="required">*</span></label>
+                            <span class="help-block"><?= Html::error($model,'ims_totalProductQty'); ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Submit' : 'Update', ['class' => $model->isNewRecord ? 'btn green-meadow' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
-
-</div>

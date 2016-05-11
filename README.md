@@ -1,6 +1,19 @@
 e-Inventory System
 ============================
 
+**NOTES:**
+
+- Refer to the README before start your system.
+- Delete all table in e-ims database then import dump sql file table into e-ims database. All dumpfile mysql can get at db folder.
+
+UPDATE 12/05/2016
+-------------------
+- Add menu inventory -> management in employee level
+- Add Invoice for purchase order
+- Add menu box in management site
+- restructure RDMS
+- Add history order,purchase and receiving order
+
 DIRECTORY STRUCTURE
 -------------------
 
@@ -54,8 +67,6 @@ return [
     'charset' => 'utf8',
 ];
 ```
-Open http://localhost/phpmyadmin. Then create new database with name `e-ims`. After that import `e-kims.sql` into the `e-ims` database.
 
-**NOTES:**
 
-- Refer to the README before start your system.
+

@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\ImsPurchaseOrder;
+use app\models\ImsReceiveProduct;
 
 /**
- * ImsPurchaseOrderSearch represents the model behind the search form about `app\models\ImsPurchaseOrder`.
+ * ImsReceiveProductSearch represents the model behind the search form about `app\models\ImsReceiveProduct`.
  */
-class ImsPurchaseOrderSearch extends ImsPurchaseOrder
+class ImsReceiveProductSearch extends ImsReceiveProduct
 {
     /**
      * @inheritdoc
@@ -18,9 +18,9 @@ class ImsPurchaseOrderSearch extends ImsPurchaseOrder
     public function rules()
     {
         return [
-            [['ims_purchaseId', 'ims_orderBy', 'ims_productId', 'ims_productQty','ims_supplierId'], 'integer'],
-            [['ims_purchaseDate'], 'safe'],
-            [['ims_productTotalprice'], 'number'],
+            [['id', 'ims_productId', 'ims_invoiceNo', 'ims_qtyRec','ims_receiveBy'], 'integer'],
+            [['ims_dateCreate', 'ims_productDesc'], 'safe'],
+            [['ims_totalPrice'], 'number'],
         ];
     }
 
@@ -42,14 +42,16 @@ class ImsPurchaseOrderSearch extends ImsPurchaseOrder
      */
     public function search($params)
     {
-        $query = ImsPurchaseOrder::find()
-                ->where(['ims_orderBy'=>Yii::$app->user->identity->id]);
+        $user = Yii::$app->user->identity->id;
+        $todayDate = date('d/m/Y');
+        $query = ImsReceiveProduct::find()
+                ->where(['ims_receiveBy'=>$user])
+                ->andWhere(['ims_dateCreate'=>$todayDate]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['ims_purchaseDate' => SORT_DESC]],
         ]);
 
         $this->load($params);
@@ -62,14 +64,15 @@ class ImsPurchaseOrderSearch extends ImsPurchaseOrder
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'ims_purchaseId' => $this->ims_purchaseId,
-            'ims_orderBy' => $this->ims_orderBy,
+            'id' => $this->id,
             'ims_productId' => $this->ims_productId,
-            'ims_productQty' => $this->ims_productQty,
-            'ims_productTotalprice' => $this->ims_productTotalprice,
+            'ims_invoiceNo' => $this->ims_invoiceNo,
+            'ims_qtyRec' => $this->ims_qtyRec,
+            'ims_totalPrice' => $this->ims_totalPrice,
         ]);
 
-        $query->andFilterWhere(['like', 'ims_purchaseDate', $this->ims_purchaseDate]);
+        $query->andFilterWhere(['like', 'ims_dateCreate', $this->ims_dateCreate])
+            ->andFilterWhere(['like', 'ims_productDesc', $this->ims_productDesc]);
 
         return $dataProvider;
     }

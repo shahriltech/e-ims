@@ -6,21 +6,28 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ImsSupplier */
 
-$this->params['breadcrumbs'][] = ['label' => 'Ims Suppliers', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<span id="productUpdate" class="<?php echo Yii::$app->controller->id."/".Yii::$app->controller->action->id;?>"></span>
+<!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <?= Html::a('Home', ['ims-supplier/index']) ?>
+            <?= Html::a('Home', ['site/index']) ?>
                 <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Update Supplier</span>
+            <?= Html::a('Menu Inventory', ['ims-product/menubox']) ?>
+                <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <?= Html::a('List Received Product', ['ims-receive-product/index']) ?>
+                <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <span>Add Item</span>
         </li>
     </ul>
 </div>
+<!-- END PAGE BAR -->
 <div class='row'>
 	<div class="col-md-12">
 		<div class="note note-danger">
@@ -30,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			<div class="portlet-title">
 	            <div class="caption font-green-haze">
 	                <i class="icon-user font-green-haze"></i>
-	                <span class="caption-subject bold uppercase">Update Supplier </span>
+	                <span class="caption-subject bold uppercase">Add Supplier </span>
 	            </div>
 	            <div class="actions">
 	                                <!---->

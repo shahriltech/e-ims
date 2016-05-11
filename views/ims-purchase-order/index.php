@@ -3,35 +3,90 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ImsPurchaseOrderSearch */
+/* @var $searchModel app\models\ImsProductSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Ims Purchase Orders';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="ims-purchase-order-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<!-- BEGIN PAGE BAR -->
+<span id="historyOrder" class="<?php echo Yii::$app->controller->id."/".Yii::$app->controller->action->id;?>"></span>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <?= Html::a('Home', ['site/index']) ?>
+                <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <?= Html::a('Menu Inventory', ['ims-purchase-order/index']) ?>
+                <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <span>History Order</span>
+        </li>
+    </ul>
+</div>
+<!-- END PAGE BAR -->
+<!-- BEGIN PAGE TITLE-->
+    <h3 class="page-title">
+    </h3>
+    <!-- END PAGE TITLE-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-users"></i>History Order
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="ims-product-index">
 
-    <p>
-        <?= Html::a('Create Ims Purchase Order', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-<?php Pjax::begin(); ?>    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+                    <h1><?= Html::encode($this->title) ?></h1>
+                    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-            'ims_purchaseId',
-            'ims_purchaseDate',
-            'ims_orderBy',
-            'ims_productId',
-            'ims_productQty',
-            // 'ims_productTotalprice',
+                    <?php Pjax::begin(); ?>    <?= GridView::widget([
+                        'dataProvider' => $dataProvider,
+                        //'filterModel' => $searchModel,
+                        'summary'=>'',
+                        'columns' => [
+                            ['class' => 'yii\grid\SerialColumn'],
+                            [
+                             'attribute' => 'Purchase Date',
+                             'value' => 'ims_purchaseDate'
+                            ],
+                            [
+                                'attribute' => 'Invoice Number',
+                                'value' => 'ims_invoicePurchaseno'  
+                            ],
+                            [
+                                'attribute' => 'Supplier/Vendor Name',
+                                'value' => 'ims_supplierName' 
+                            ],
+                            [
+                                'header' => 'Action',
+                                'class' => 'yii\grid\ActionColumn',
+                                'template'=>'{invoice}',
+                                'buttons' => [
+                                    'invoice' => function ($url, $model) {
+                                        return Html::a('<i class="fa fa-hand-o-right"></i>', 
+                                            $url,['title'=> Yii::t('app','Lihat'),'class'=>'btn btn-circle btn-icon-only green-meadow']);
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-<?php Pjax::end(); ?></div>
+                                    },
+                                ],
+                            ],
+                           // 'ims_productId',
+                            //'ims_productQty',
+                            // 'ims_productTotalprice',
+                        ],
+                        'tableOptions' =>['class' => 'table table-striped table-hover'],
+                    ]); ?>
+                <?php Pjax::end(); ?>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

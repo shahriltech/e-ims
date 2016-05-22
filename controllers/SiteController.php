@@ -8,7 +8,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-
+use app\models\ImsPurchaseOrder;
+use app\models\ImsProduct;
 class SiteController extends Controller
 {
     public function behaviors()
@@ -55,7 +56,45 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $connection = \Yii::$app->db;
+        $sql = $connection->createCommand('select sum(ims_productPrice * ims_totalProductQty) AS sum,sum(ims_totalProductQty) AS totalprod from ims_product');
+        $model = $sql->queryAll();
+
+        $sql1 = $connection->createCommand('select u.ims_fname,count(p.ims_orderBy) AS totalC,sum(p.ims_productTotalprice) AS sum 
+from ims_purchaseOrder p
+left join ims_user u on u.id = p.ims_orderBy
+group by ims_orderBy');
+        $model1 = $sql1->queryAll();
+
+        $model2 = ImsPurchaseOrder::find()
+                ->where(['ims_statusOrder'=>'Approved'])
+                ->count();     
+
+        $model4 = ImsPurchaseOrder::find()
+                ->where(['ims_statusOrder'=>'Pending'])
+                ->count();
+
+        $sql2 = $connection->createCommand('SELECT c.ims_categoryName, SUM(i.ims_totalProductQty) AS total from ims_product i left join ims_category c on c.ims_categoryId = i.ims_categoryId group by ims_categoryName');
+        $model3 = $sql2->queryAll();
+
+        $model5 = ImsProduct::find()
+                ->where(['<','ims_totalProductQty',5])
+                ->count();
+        $model6 = ImsProduct::find()
+                ->orderBy([
+                       'ims_productId' => SORT_DESC,
+                    ])
+                ->limit(3)
+                ->all();
+        return $this->render('index', [
+            'model' => $model,
+            'model2'=>$model2,
+            'model1'=>$model1,
+            'model3'=>$model3,
+            'model4'=>$model4,
+            'model5'=>$model5,
+            'model6'=>$model6,
+        ]);
     }
 
     public function actionLogin()

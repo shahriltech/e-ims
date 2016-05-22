@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\ImsProduct;
 /**
  * This is the model class for table "ims_receiveProduct".
  *
@@ -53,5 +53,9 @@ class ImsReceiveProduct extends \yii\db\ActiveRecord
             'ims_productDesc' => 'Product Description',
             'ims_dateCreate' =>'Date Create'
         ];
+    }
+    public function getProductname()
+    {
+        return $this->hasOne(ImsProduct::className(), ['ims_productId' => 'ims_productId']);
     }
 }

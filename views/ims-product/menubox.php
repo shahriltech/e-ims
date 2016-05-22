@@ -28,7 +28,7 @@ use yii\grid\GridView;
             </div>
             <div class="details">
                 <div class="number">
-                    <span data-counter="counterup" data-value="1349">Receiving Order</span>
+                    <span>Receiving Order</span>
                 </div>
             </div>
             <?= Html::a('View More<i class="m-icon-swapright m-icon-white"></i>', ['ims-receive-product/index'],['class'=>'more']) ?>
@@ -42,7 +42,7 @@ use yii\grid\GridView;
             </div>
             <div class="details">
                 <div class="number">
-                    <span data-counter="counterup" data-value="1349">Purchase Order</span>
+                    <span>Purchase Order</span>
                 </div>
             </div>
             <?= Html::a('View More<i class="m-icon-swapright m-icon-white"></i>', ['ims-purchase-order/create'],['class'=>'more']) ?>
@@ -56,7 +56,7 @@ use yii\grid\GridView;
             </div>
             <div class="details">
                 <div class="number">
-                    <span data-counter="counterup" data-value="1349">History Order</span>
+                    <span>History Order</span>
                 </div>
             </div>
             <?= Html::a('View More<i class="m-icon-swapright m-icon-white"></i>', ['ims-purchase-order/index'],['class'=>'more']) ?>
@@ -69,7 +69,7 @@ use yii\grid\GridView;
             </div>
             <div class="details">
                 <div class="number">
-                    <span data-counter="counterup" data-value="1349">New Product</span>
+                    <span>New Product</span>
                 </div>
             </div>
             <a class="more" href="javascript:;"> View more

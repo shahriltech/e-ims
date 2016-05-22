@@ -9,6 +9,7 @@ use yii\grid\GridView;
 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<span id="indexsproduct" class="<?php echo Yii::$app->controller->id."/".Yii::$app->controller->action->id;?>"></span>
 
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
@@ -53,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         //'filterModel' => $searchModel,
-
+                        
                         'pager' => [
                                 'firstPageLabel' => 'First',
                                 'lastPageLabel' => 'Last',

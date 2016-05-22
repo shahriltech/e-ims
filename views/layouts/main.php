@@ -10,7 +10,7 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use yii\widgets\Menu;
 use yii\bootstrap\Modal;
-
+use yii\db\Query;
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -47,8 +47,8 @@ AppAsset::register($this);
             <div class="page-header-inner ">
                 <!-- BEGIN LOGO -->
                 <div class="page-logo">
-                    <a href="index.html">
-                        <img src="../assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" /> </a>
+                    <a href="#">
+                        <img src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/pages/img/logoIms_4.png" alt="logo" class="logo-default"> </a>
                    <!-- <div class="menu-toggler sidebar-toggler"> </div> -->
                 </div>
                 <!-- END LOGO -->
@@ -61,6 +61,61 @@ AppAsset::register($this);
                         
                         <!-- BEGIN USER LOGIN DROPDOWN -->
                         <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                        <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                            <?php
+                                    $query = (new \yii\db\Query())->from('ims_product')->where(['<','ims_totalProductQty',5]); //count good out of stock
+                                    $sum = $query->count();
+                                   
+                                    $sum1 = (new \yii\db\Query())->select(['ims_invoicePurchaseno'])
+                                            ->from('ims_purchaseOrder')
+                                            ->where(['ims_statusOrder'=>'Pending'])
+                                            ->distinct()
+                                            ->count(); //count good out of stock
+                            ?>
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <i class="icon-bell"></i>
+                                <?php if($sum1 != 0 || $sum != 0){ ?>
+                                <span class="badge badge-default">New</span>
+                                <?php }else{ }?>
+                               
+                            </a>
+                            <ul class="dropdown-menu">
+                                
+                                <li class="external">
+                                    <h3>
+                                        <?php if($sum1 != 0 || $sum != 0){ ?>
+                                        <span class="bold">You have</span> notifications
+                                        <?php }else{ ?>
+                                        <span class="bold">You don't have</span> notification
+                                        <?php }?>
+                                        </h3>
+                                </li>
+                                <ul class="dropdown-menu-list scroller" style="height: 150px;" data-handle-color="#637283">
+                                    <?php if($sum != 0){ ?>
+                                    <li> 
+                                        <a href="javascript:;">
+                                                <span class="details">
+                                                    <span class="label label-sm label-icon label-success">
+                                                        <i class="fa fa-bullhorn"></i>
+                                                    </span><?php echo $sum; ?> item out of stock !
+                                                </span>
+                                        </a>
+                                    </li>
+                                    <?php }?>
+                                    <?php if($sum1 != 0){ ?>
+                                    <li> 
+                                        <a href="index.php?r=ims-purchase-order%2Fneworder">
+                                                <span class="details">
+                                                    <span class="label label-sm label-icon label-danger">
+                                                        <i class="fa fa-shopping-cart"></i>
+                                                    </span><?php echo $sum1; ?> latest order should be approve
+                                                </span>
+                                        </a>
+                                    </li>
+                                    <?php }?>
+                                </ul>
+                            </ul>
+                        </li>
                         <li class="dropdown dropdown-user">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                 <img src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/layouts/layout/img/avatar.png" alt="" ></button>
@@ -95,6 +150,14 @@ AppAsset::register($this);
                 <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
                 <div class="page-sidebar navbar-collapse collapse">
                     <!-- BEGIN SIDEBAR MENU -->
+                    <?php 
+                        if($sum1 != 0){
+                            $s = '<span class="badge badge-danger">'.$sum1.'</span>';
+                        }
+                        else{
+                            $s ='<span class="badge badge-danger"></span>';
+                        }
+                    ?>
                     <?php  
                         echo Menu::widget([
                             'items' => [
@@ -104,11 +167,13 @@ AppAsset::register($this);
                                     'options'=>['class'=>'nav-item '],
                                     'template' => '<a href="javascript:;" class="nav-link nav-toggle">{label}</a>',
                                     'items' => [
-                                        ['label' => '<i class="icon-graph"></i>Product', 'url' => ['ims-product/index'],'options'=>['id'=>'product']],
-                                        ['label' => '<i class="icon-basket"></i><span class="title">Orders</span>', 'url' => ['product/popular']],
+                                        ['label' => '<i class="icon-graph"></i>Product', 'url' => ['ims-product/index'],'options'=>['id'=>'prodStorage']],
+                                        ['label' => '<i class="icon-basket"></i><span class="title">Purchase</span>'.$s,
+
+                                         'url' => ['ims-purchase-order/neworder'],'options'=>['id'=>'order']],
                                     ],
                                     'itemOptions'=>array( 'class'=>'nav-item'),
-                                    'options'=>['id'=>'inventory']
+                                    'options'=>['id'=>'inventoryManagement']
                                 ],
                                 ['label' => '<i class="icon-settings"></i>Setting<span class="arrow"></span>','submenuTemplate' => "\n<ul class='sub-menu'>\n{items}\n</ul>\n",
                                     //'url' => ['ims-product/index'],
@@ -167,7 +232,7 @@ AppAsset::register($this);
             <div class="page-header-inner ">
                 <!-- BEGIN LOGO -->
                 <div class="page-logo">
-                    <a href="index.html">
+                    <a href="#">
                         <img src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/pages/img/logoIms_4.png" alt="logo" class="logo-default"></button>
                    <!-- <div class="menu-toggler sidebar-toggler"> </div> -->
                 </div>
@@ -181,6 +246,7 @@ AppAsset::register($this);
                         
                         <!-- BEGIN USER LOGIN DROPDOWN -->
                         <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                        
                         <li class="dropdown dropdown-user">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                 <img src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/layouts/layout/img/avatar.png" alt="" ></button>
@@ -294,6 +360,8 @@ AppAsset::register($this);
 
 <script src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
 <script src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
+<script src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/global/plugins/counterup/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
 
 <script src="<?php echo Yii::$app->request->baseUrl; ?>/metronic/assets/global/scripts/app.min.js" type="text/javascript"></script>
 

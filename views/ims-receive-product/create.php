@@ -37,7 +37,7 @@ use yii\helpers\Html;
 			<div class="portlet-title">
 	            <div class="caption font-green-haze">
 	                <i class="icon-user font-green-haze"></i>
-	                <span class="caption-subject bold uppercase">Add Supplier </span>
+	                <span class="caption-subject bold uppercase">Add Item </span>
 	            </div>
 	            <div class="actions">
 	                                <!---->

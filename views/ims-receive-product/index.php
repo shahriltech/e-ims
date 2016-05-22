@@ -38,7 +38,7 @@ use yii\helpers\Url;
         <div class="portlet light bordered">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="fa fa-users"></i>Received Product
+                    <i class="fa fa-cart-plus"></i>Received Product
                 </div>
                 <div class="actions">
                    <?= Html::a('<i class="fa fa-plus"></i><span class="hidden-xs">Add More </span>', ['create'], ['class' => 'btn btn-success']) ?>
@@ -55,12 +55,9 @@ use yii\helpers\Url;
                             'columns' => [
                                 ['class' => 'yii\grid\SerialColumn'],
 
-                                'ims_productId',
-                                //'ims_receiveDate',
+                                'productname.ims_productName',
                                 'ims_invoiceNo',
                                 'ims_qtyRec',
-                                // 'ims_totalPrice',
-                                // 'ims_productDesc',
 
                                 ['class' => 'yii\grid\ActionColumn'],
                             ],

@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\ImsPurchaseOrder;
 use app\models\ImsPurchaseOrderSearch;
+use app\models\PendingPurchaseSearch;
 use app\models\ImsSupplier;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -160,6 +161,23 @@ class ImsPurchaseOrderController extends Controller
                 'model3' =>$model3,
             ]);
     }
+    public function actionInvoice_1($id){
+        $model = ImsPurchaseOrder::find() //retrieve data with specific data
+                ->where(['ims_invoicePurchaseno'=>$id])
+                ->one();
+        $model2 = ImsSupplier::find()
+                ->where(['ims_supplierId'=>$model->ims_supplierId])
+                ->one();
+        $model3 = new ActiveDataProvider([
+            'query' => ImsPurchaseOrder::find()->where(['ims_invoicePurchaseno'=>$id]),
+            'pagination' => ['pageSize'=>52],
+        ]);
+            return $this->render('invoice_1',[
+                'model'=>$model,
+                'model2'=>$model2,
+                'model3' =>$model3,
+            ]);
+    }
     /**
      * Updates an existing ImsPurchaseOrder model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -182,7 +200,12 @@ class ImsPurchaseOrderController extends Controller
             $model->ims_productTotalprice = $qty;
             
             if ($model->save()) {
-                return $this->redirect(['invoice', 'id' => $model2->ims_invoicePurchaseno]);
+                if (Yii::$app->user->identity->role == 1) {
+                    return $this->redirect(['invoice_1', 'id' => $model2->ims_invoicePurchaseno]); //return to page admin invoice_1
+                }
+                else{
+                    return $this->redirect(['invoice', 'id' => $model2->ims_invoicePurchaseno]); //return to page employee invoice
+                }
             }
             
         } else {
@@ -201,20 +224,75 @@ class ImsPurchaseOrderController extends Controller
     public function actionSaveinvoice($id){
         $model = ImsPurchaseOrder::find()
                 ->where(['ims_invoicePurchaseno'=>$id])
-                ->one();
-        $model->ims_statusOrder = 'Pending';
-        
-        if ($model->save()) {
+                ->all();
+        $connection = Yii::$app->db;
+
+        foreach ($model as $key => $value) {
+
+            $value['ims_statusOrder'] = 'Pending';
+            $value->save();
+            
+        }
             Yii::$app->getSession()->setFlash('save', 'Invoice Successfully Saved');
             return $this->redirect(['ims-purchase-order/create']);
-        }
-        else{
-            return $this->render('saveinvoice',[
-                'model'=>$model,
-            ]);
-        }
     }
 
+    public function actionNeworder(){
+        $searchModel = new PendingPurchaseSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+       // distinct 
+        $totalCount = Yii::$app->db->createCommand('SELECT COUNT(*) FROM ims_purchaseOrder WHERE ims_statusOrder = :ims_statusOrder',
+            [':ims_statusOrder' => 'Pending'])->queryScalar();
+
+        $dataProvider = new SqlDataProvider([
+            'sql' => 'SELECT distinct p.ims_invoicePurchaseno,p.ims_purchaseDate,p.ims_statusOrder FROM ims_purchaseOrder p WHERE ims_statusOrder = :ims_statusOrder order by ims_purchaseDate DESC',
+            'params' => [':ims_statusOrder' => 'Pending'],
+            'totalCount' => $totalCount,
+            'key' => 'ims_invoicePurchaseno',
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'attributes' => [
+                    'ims_invoicePurchaseno',
+                    'ims_purchaseDate',
+                ]
+            ]
+        ]);
+
+        $models = $dataProvider->getModels();
+
+        return $this->render('neworder', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    public function actionApprove($id){
+        $model = ImsPurchaseOrder::find()
+                ->where(['ims_invoicePurchaseno'=>$id])
+                ->all();
+
+        $count = ImsPurchaseOrder::find()
+        ->where(['ims_invoicePurchaseno' => $id])
+        ->count();
+
+        $connection = Yii::$app->db;
+        $i = 1;
+        foreach ($model as $key => $value) {
+
+            $value['ims_statusOrder'] = 'Approved';
+
+            $value->save();
+            $i++;
+            
+        }
+        if ($i > $count ) {
+            Yii::$app->getSession()->setFlash('submitted', 'Order Successfully');
+            return $this->redirect(['ims-purchase-order/neworder']);
+        }
+        
+            
+    }
     /**
      * Deletes an existing ImsPurchaseOrder model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -235,6 +313,18 @@ class ImsPurchaseOrderController extends Controller
         
     }
 
+    public function actionCancelorder($id)
+    {   
+        $model2 = ImsPurchaseOrder::find()
+                ->where(['ims_invoicePurchaseno'=>$id])
+                ->all();
+
+        ImsPurchaseOrder::deleteAll(['ims_invoicePurchaseno'=>$id]);
+        Yii::$app->getSession()->setFlash('submitted', 'Cancel the order has been successfully');
+            return $this->redirect(['ims-purchase-order/neworder']);
+    
+        
+    }
     /**
      * Finds the ImsPurchaseOrder model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

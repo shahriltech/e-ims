@@ -6,13 +6,13 @@ e-Inventory System
 - Refer to the README before start your system.
 - Delete all table in e-ims database then import dump sql file table into e-ims database. All dumpfile mysql can get at db folder.
 
-UPDATE 12/05/2016
+UPDATE 22/03/2016
 -------------------
-- Add menu inventory -> management in employee level
-- Add Invoice for purchase order
-- Add menu box in management site
-- restructure RDMS
-- Add history order,purchase and receiving order
+- Add new 3rd party packages in vendor folder
+- Add dashboard page
+- Add new features at admin page like notification bar, badge beside submenu, purchase order approval
+- Add jquery waypoint and counterup
+- Edit `js/extra.js`
 
 DIRECTORY STRUCTURE
 -------------------

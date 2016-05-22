@@ -9,6 +9,8 @@ use yii\grid\GridView;
 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<span id="indexscategory" class="<?php echo Yii::$app->controller->id."/".Yii::$app->controller->action->id;?>"></span>
+
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">

@@ -84,8 +84,11 @@ $supplier = ArrayHelper::map(ImsSupplier::find()->asArray()->orderBy(['ims_suppl
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Submit Your Order', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::a('Cancel', ['ims-product/menubox'],['class'=>'btn btn-default']) ?>
-
+        <?php if (Yii::$app->user->identity->role == 1) { ?>
+            <?= Html::a('Cancel', ['ims-purchase-order/neworder'],['class'=>'btn btn-default']) ?>
+        <?php }else{ ?>
+            <?= Html::a('Cancel', ['ims-product/menubox'],['class'=>'btn btn-default']) ?>
+        <?php } ?>
     </div>
 
     <?php ActiveForm::end(); ?>

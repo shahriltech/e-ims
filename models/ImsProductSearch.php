@@ -48,6 +48,10 @@ class ImsProductSearch extends ImsProduct
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+           // 'pagination'=>false,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
 
         $this->load($params);

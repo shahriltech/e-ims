@@ -52,7 +52,12 @@ $this->title = 'My Yii Application';
                 </div>
                 <div class="details">
                     <div class="number">
-                        <span data-counter="counterup" data-value="<?php echo $model2?>">0</span>
+
+                        <span data-counter="counterup" data-value="<?php
+                            foreach ($model2 as $key => $value) {
+                                echo $value['totalApprove'];
+                            }
+                         ?>">0</span>
                     </div>
                     <div class="desc"> Total Orders </div>
                 </div>

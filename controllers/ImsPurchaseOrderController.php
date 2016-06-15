@@ -6,6 +6,7 @@ use Yii;
 use app\models\ImsPurchaseOrder;
 use app\models\ImsPurchaseOrderSearch;
 use app\models\PendingPurchaseSearch;
+use app\models\ImsHistoryorderSearch;
 use app\models\ImsSupplier;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -49,7 +50,7 @@ class ImsPurchaseOrderController extends Controller
             [':ims_orderBy' => Yii::$app->user->identity->id])->queryScalar();
 
         $dataProvider = new SqlDataProvider([
-            'sql' => 'SELECT distinct p.ims_invoicePurchaseno,p.ims_purchaseDate,i.ims_supplierName FROM ims_purchaseOrder p left join ims_supplier i on i.ims_supplierId = p.ims_supplierId WHERE ims_orderBy = :ims_orderBy order by ims_purchaseDate DESC',
+            'sql' => 'SELECT distinct p.ims_invoicePurchaseno,p.ims_purchaseDate,i.ims_supplierName,p.ims_statusOrder FROM ims_purchaseOrder p left join ims_supplier i on i.ims_supplierId = p.ims_supplierId WHERE ims_orderBy = :ims_orderBy order by ims_purchaseId DESC',
             'params' => [':ims_orderBy' => Yii::$app->user->identity->id],
             'totalCount' => $totalCount,
             'key' => 'ims_invoicePurchaseno',
@@ -144,6 +145,55 @@ class ImsPurchaseOrderController extends Controller
         }
     }
 
+    public function actionAdminorder()
+    {
+        $model = new ImsPurchaseOrder();
+        $staffid = Yii::$app->user->identity->id;
+        $connection = Yii::$app->db; 
+
+        if ($model->load(Yii::$app->request->post())) {
+            $count = count($_POST['ImsPurchaseOrder']['ims_productId']);
+            //create invoice 
+                $length = rand(7,7);
+                $chars = array_merge(range(0,9));
+                shuffle($chars);
+                $number = implode(array_slice($chars, 0,$length));
+                $model->ims_invoicePurchaseno = $number;
+                //Yii::$app->formatter->locale = 'ms-MY'; 
+                $model->ims_purchaseDate = Yii::$app->formatter->asDate('now', 'dd MMMM Y');
+
+                //$model->ims_purchaseDate=date('d/m/Y');
+                $model->ims_orderBy = $staffid;
+                $model->ims_statusOrder = "Pending";
+            for ($i=0; $i <$count ; $i++) {
+                $model2 = ImsProduct::find()
+                        ->where(['ims_productId'=>$model->ims_productId[$i]])
+                        ->one();
+
+                $a = $model->ims_supplierId;
+                $b = $model->ims_productId[$i];
+                $qty = $model->ims_productQty[$i] * $model2->ims_productPrice;
+                $d = $model->ims_invoicePurchaseno;
+                $e = $model->ims_purchaseDate;
+                $f = $model->ims_orderBy;
+                $g = $model->ims_productQty[$i];
+                $model->ims_productTotalprice = $qty;
+                $h = $model->ims_productTotalprice;
+                $j = $model->ims_statusOrder;
+
+                $connection->createCommand()->batchInsert('ims_purchaseOrder', ['ims_supplierId', 'ims_productId','ims_productQty','ims_productTotalprice','ims_orderBy','ims_purchaseDate','ims_invoicePurchaseno','ims_statusOrder'], [
+                            [$a, $b,$g,$h,$f,$e,$d,$j],
+                        ])->execute();
+            }
+
+            return $this->redirect(['ims-purchase-order/adminconfirmorder','id'=>$model->ims_invoicePurchaseno]);
+        } else {
+            return $this->render('adminorder', [
+                'model' => $model,
+            ]);
+        }
+    }
+
     public function actionInvoice($id){
         $model = ImsPurchaseOrder::find() //retrieve data with specific data
                 ->where(['ims_invoicePurchaseno'=>$id])
@@ -173,6 +223,24 @@ class ImsPurchaseOrderController extends Controller
             'pagination' => ['pageSize'=>52],
         ]);
             return $this->render('invoice_1',[
+                'model'=>$model,
+                'model2'=>$model2,
+                'model3' =>$model3,
+            ]);
+    }
+
+    public function actionAdminconfirmorder($id){
+        $model = ImsPurchaseOrder::find() //retrieve data with specific data
+                ->where(['ims_invoicePurchaseno'=>$id])
+                ->one();
+        $model2 = ImsSupplier::find()
+                ->where(['ims_supplierId'=>$model->ims_supplierId])
+                ->one();
+        $model3 = new ActiveDataProvider([
+            'query' => ImsPurchaseOrder::find()->where(['ims_invoicePurchaseno'=>$id]),
+            'pagination' => ['pageSize'=>52],
+        ]);
+            return $this->render('adminconfirmorder',[
                 'model'=>$model,
                 'model2'=>$model2,
                 'model3' =>$model3,
@@ -215,12 +283,41 @@ class ImsPurchaseOrderController extends Controller
             ]);
         }
     }
+ 
+    public function actionUpdate1($id) //for page adminconfirmorder
+    {
+        $model = $this->findModel($id);
+        $model2 = ImsPurchaseOrder::find()
+                ->where(['ims_invoicePurchaseno'=>$model->ims_invoicePurchaseno])
+                ->one();
+        if ($model->load(Yii::$app->request->post()) ) 
+        {
+            $model3 = ImsProduct::find()
+                        ->where(['ims_productId'=>$model->ims_productId])
+                        ->one();
+
+            $qty = $model->ims_productQty * $model3->ims_productPrice;
+            $model->ims_productTotalprice = $qty;
+            
+            if ($model->save()) {
+                    return $this->redirect(['adminconfirmorder', 'id' => $model2->ims_invoicePurchaseno]); //return to page admin invoice_1
+                }
+            
+        } else {
+            
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
     public function actionConfirmdelete($id)
     {
         return $this->renderAjax('confirmdelete', [
             'model' => $this->findModel($id),
         ]);
     }
+
     public function actionSaveinvoice($id){
         $model = ImsPurchaseOrder::find()
                 ->where(['ims_invoicePurchaseno'=>$id])
@@ -245,7 +342,7 @@ class ImsPurchaseOrderController extends Controller
             [':ims_statusOrder' => 'Pending'])->queryScalar();
 
         $dataProvider = new SqlDataProvider([
-            'sql' => 'SELECT distinct p.ims_invoicePurchaseno,p.ims_purchaseDate,p.ims_statusOrder FROM ims_purchaseOrder p WHERE ims_statusOrder = :ims_statusOrder order by ims_purchaseDate DESC',
+            'sql' => 'SELECT distinct p.ims_invoicePurchaseno,p.ims_purchaseDate,p.ims_statusOrder FROM ims_purchaseOrder p WHERE ims_statusOrder = :ims_statusOrder order by ims_purchaseId DESC',
             'params' => [':ims_statusOrder' => 'Pending'],
             'totalCount' => $totalCount,
             'key' => 'ims_invoicePurchaseno',
@@ -267,10 +364,18 @@ class ImsPurchaseOrderController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-    public function actionApprove($id){
+    public function actionApprove($id){   //send to vendor and approve 
         $model = ImsPurchaseOrder::find()
                 ->where(['ims_invoicePurchaseno'=>$id])
                 ->all();
+
+        $model2 = ImsPurchaseOrder::find()
+                ->where(['ims_invoicePurchaseno'=>$id])
+                ->one();
+
+        $model3 = ImsSupplier::find()
+                ->where(['ims_supplierId'=>$model2->ims_supplierId])
+                ->one();
 
         $count = ImsPurchaseOrder::find()
         ->where(['ims_invoicePurchaseno' => $id])
@@ -287,8 +392,31 @@ class ImsPurchaseOrderController extends Controller
             
         }
         if ($i > $count ) {
-            Yii::$app->getSession()->setFlash('submitted', 'Order Successfully');
-            return $this->redirect(['ims-purchase-order/neworder']);
+
+            try{
+                $result = Yii::$app->mailer->compose()
+                        ->setFrom('karismainventory@gmail.com')
+                        ->setTo($model3->ims_supplierEmail)
+                        ->setSubject('e-IMS - New Order')
+                        ->setTextBody('Plain text content')
+                        ->setHtmlBody('<p>Hi Sir/Madam/Mr./Miss,<br><br>You receive orders from Karisma Enterprise. Please click on the link below to view the invoice and you are asked to print or save this invoice as your reference.<br><br><a href="http://localhost/e-ims/web/index.php?r=site/vendorinvoice&id='.$id.'">http://localhost/e-ims/web/index.php?r=site/vendorinvoice&id='.$id.'"</a><br>
+                            <hr><br><br>
+                            <strong>Warning</strong>: This is an automated email from eIMS system. Any problem, please contact the system administrator eIMS.<br>Best Regards,<br>eInventory Management Systems.</p>')
+                        ->send();
+
+                if($result === false){
+                    return $this->redirect(['ims-purchase-order/invoice_1','id'=>$id]);
+                    echo "Mail Not Send";
+                }
+                else{
+                    Yii::$app->getSession()->setFlash('submitted', 'The order has been submitted to vendor.');
+                        return $this->redirect(['ims-purchase-order/neworder']);
+                }
+            }
+            catch(Exception $e){
+                echo $e->getMessage();
+            }
+
         }
         
             
@@ -313,6 +441,71 @@ class ImsPurchaseOrderController extends Controller
         
     }
 
+    public function actionSend_to_vendor($id){
+        
+        $model2 = ImsPurchaseOrder::find()
+                ->where(['ims_invoicePurchaseno'=>$id])
+                ->one();
+        $model2->ims_statusOrder = 'Approved';
+        $model2->updateAll(['ims_statusOrder'=>'Approved'],'ims_invoicePurchaseno ='.$id);
+
+        $model3 = ImsSupplier::find()
+                ->where(['ims_supplierId'=>$model2->ims_supplierId])
+                ->one();
+        try{
+            $result = Yii::$app->mailer->compose()
+                    ->setFrom('karismainventory@gmail.com')
+                    ->setTo($model3->ims_supplierEmail)
+                    ->setSubject('e-IMS - New Order')
+                    ->setTextBody('Plain text content')
+                    ->setHtmlBody('<p>Hi Sir/Madam/Mr./Miss,<br><br>You receive orders from Karisma Enterprise. Please click on the link below to view the invoice and you are asked to print or save this invoice as your reference.<br><br><a href="http://localhost/e-ims/web/index.php?r=site/vendorinvoice&id='.$id.'">http://localhost/e-ims/web/index.php?r=site/vendorinvoice&id='.$id.'"</a><br>
+                            <hr><br><br>
+                            <strong>Warning</strong>: This is an automated email from eIMS system. Any problem, please contact the system administrator eIMS.<br>Best Regards,<br>eInventory Management Systems.</p>')
+                    ->send();
+
+            if($result === false){
+                return $this->redirect(['ims-purchase-order/adminconfirmorder','id'=>$id]);
+                echo "Mail Not Send";
+            }
+            else{
+                Yii::$app->getSession()->setFlash('submitted', 'Your order has been submitted to vendor.');
+                return $this->redirect(['ims-purchase-order/neworder']);
+                echo "Mail Sent";
+            }
+        }
+        catch(Exception $e){
+            echo $e->getMessage();
+        }
+
+    }
+    public function actionHistoryorder(){
+        $searchModel = new ImsHistoryorderSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('historyorder', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionHistory_invoice($id){
+        $model = ImsPurchaseOrder::find() //retrieve data with specific data
+                ->where(['ims_invoicePurchaseno'=>$id])
+                ->one();
+        $model2 = ImsSupplier::find()
+                ->where(['ims_supplierId'=>$model->ims_supplierId])
+                ->one();
+        $model3 = new ActiveDataProvider([
+            'query' => ImsPurchaseOrder::find()->where(['ims_invoicePurchaseno'=>$id]),
+            'pagination' => ['pageSize'=>52],
+        ]);
+            return $this->render('history_invoice',[
+                'model'=>$model,
+                'model2'=>$model2,
+                'model3' =>$model3,
+            ]);
+    }
+
     public function actionCancelorder($id)
     {   
         $model2 = ImsPurchaseOrder::find()
@@ -320,10 +513,21 @@ class ImsPurchaseOrderController extends Controller
                 ->all();
 
         ImsPurchaseOrder::deleteAll(['ims_invoicePurchaseno'=>$id]);
-        Yii::$app->getSession()->setFlash('submitted', 'Cancel the order has been successfully');
+
+        if(Yii::$app->user->identity->role == 1){
+            Yii::$app->getSession()->setFlash('submitted', 'Cancel the order has been successfully');
             return $this->redirect(['ims-purchase-order/neworder']);
+        }
+        else{
+            Yii::$app->getSession()->setFlash('submitted', 'Cancel the order has been successfully');
+            return $this->redirect(['ims-purchase-order/index']);
+        }
+        
     
         
+    }
+    public function actionMenubox(){
+        return $this->render('menubox');
     }
     /**
      * Finds the ImsPurchaseOrder model based on its primary key value.

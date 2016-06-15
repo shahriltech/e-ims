@@ -19,11 +19,36 @@ $(function(){
         $('li > ul > li#order').addClass('active');
 
     }
+
     if($('#purchaseCreate').hasClass('ims-purchase-order/create')){
         $('li#inventoryManagement').addClass('active');
         $('li#inventoryManagement > a > span').addClass('open');
         $('li > ul > li#order').addClass('active'); //KIV
 
+    }
+    if($('#AdminpurchaseCreate').hasClass('ims-purchase-order/adminorder')){
+        $('li#inventoryManagement').addClass('active');
+        $('li#inventoryManagement > a > span').addClass('open');
+        $('li > ul > li#order').addClass('active'); //KIV
+
+    }
+    if($('#adminorderconfirm').hasClass('ims-purchase-order/adminconfirmorder')){
+        $('li#inventoryManagement').addClass('active');
+        $('li#inventoryManagement > a > span').addClass('open');
+        $('li > ul > li#order').addClass('active'); //KIV
+
+    }
+
+    if($('#historyorderlist').hasClass('ims-purchase-order/historyorder')){
+        $('li#inventoryManagement').addClass('active');
+        $('li#inventoryManagement > a > span').addClass('open');
+        $('li > ul > li#historyorder').addClass('active');
+    }
+
+    if($('#historyinvoice').hasClass('ims-purchase-order/history_invoice')){
+        $('li#inventoryManagement').addClass('active');
+        $('li#inventoryManagement > a > span').addClass('open');
+        $('li > ul > li#historyorder').addClass('active');
     }
 
     // menu inventory/management (employee page)

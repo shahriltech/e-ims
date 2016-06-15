@@ -17,8 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::a('Home', ['site/index']) ?>
                 <i class="fa fa-circle"></i>
         </li>
+
         <li>
-            <span>Manage User</span>
+            <span>Manage Users</span>
         </li>
     </ul>
 </div>
@@ -59,15 +60,29 @@ $this->params['breadcrumbs'][] = $this->title;
                             'ims_fname',
                             'ims_address',
                             'ims_phone',
-                            // 'role',
-                            // 'kims_nickname',
-                            // 'password_hash',
-                            // 'auth_key',
-                            // 'status',
-                            // 'email:email',
+                            [
+                                'header' => 'Action',
+                                'class' => 'yii\grid\ActionColumn',
+                                'template'=>'{view} {update} {delete}',
+                                    'buttons' => [
+                                        'view' => function ($url, $model) {
+                                        return Html::a('<i class="glyphicon glyphicon-eye-open"></i>', 
+                                            $url,['title'=> Yii::t('app','View'),'class'=>'btn btn-circle btn-icon-only default']);
 
-                            ['class' => 'yii\grid\ActionColumn'],
+                                        },
+                                        'update' => function ($url) {
+                                            return Html::a('<i class="glyphicon glyphicon-pencil"></i>', 
+                                                $url,['title'=> Yii::t('app','Update'),'class'=>'btn btn-circle btn-icon-only blue']);
+                                        },
+                                        'delete' => function ($url) {
+                                            return Html::a('<i class="glyphicon glyphicon-trash"></i>', 
+                                                $url,['title'=> Yii::t('app','Delete'),'class'=>'btn btn-circle btn-icon-only red','data-confirm'=>"Are You Sure ?",'data-method' => 'post']);
+                                        },
+
+                                    ],
+                            ],
                         ],
+                        'tableOptions' =>['class' => 'table table-hover'],
                     ]); ?>
                 <?php Pjax::end(); ?></div>
             </div>

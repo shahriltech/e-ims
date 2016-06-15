@@ -68,7 +68,38 @@ use yii\grid\GridView;
     </div>
     <div class="row">
         <div class="col-xs-12">
-            
+        <?php if($model->ims_statusOrder == 'Approved'){ ?>
+            <?=  GridView::widget([
+                        'dataProvider' => $model3,
+                        'summary'=>'',
+                        'columns' => [
+                            ['class' => 'yii\grid\SerialColumn'],
+                            
+                            [
+                             'attribute' => 'Item',
+                             'value' => 'productname.ims_productName'
+                            ],
+                            [
+                             'attribute' => 'Description',
+                             'value' => 'productname.ims_productDesc'
+                            ],
+                            [
+                             'attribute' => 'Quantity',
+                             'value' => 'ims_productQty'
+                            ],
+                            [
+                             'attribute' => 'Unit Price(RM)',
+                             'value' => 'productname.ims_productPrice'
+                            ],
+                            [
+                             'attribute' => 'Total(RM)',
+                             'value' => 'ims_productTotalprice'
+                            ],
+                        ],
+                        'tableOptions' =>['class' => 'table table-striped table-hover'],
+
+                    ]); ?>
+        <?php }elseif ($model->ims_statusOrder == 'Pending') {?>
             <?=  GridView::widget([
                         'dataProvider' => $model3,
                         'summary'=>'',
@@ -131,7 +162,70 @@ use yii\grid\GridView;
                         'tableOptions' =>['class' => 'table table-striped table-hover'],
 
                     ]); ?>
-                    
+        <?php }else{?> 
+            <?=  GridView::widget([
+                        'dataProvider' => $model3,
+                        'summary'=>'',
+                        'columns' => [
+                            ['class' => 'yii\grid\SerialColumn'],
+                            
+                            [
+                             'attribute' => 'Item',
+                             'value' => 'productname.ims_productName'
+                            ],
+                            [
+                             'attribute' => 'Description',
+                             'value' => 'productname.ims_productDesc'
+                            ],
+                            [
+                             'attribute' => 'Quantity',
+                             'value' => 'ims_productQty'
+                            ],
+                            [
+                             'attribute' => 'Unit Price(RM)',
+                             'value' => 'productname.ims_productPrice'
+                            ],
+                            [
+                             'attribute' => 'Total(RM)',
+                             'value' => 'ims_productTotalprice'
+                            ],
+
+                            [
+                                'header' => 'Action',
+                                'headerOptions' => ['class'=>'hidden-xs'],
+                                'class' => 'yii\grid\ActionColumn',
+                                'contentOptions' =>['class' => 'hidden-xs'],
+                                'template'=>'{edit}   {delete}',
+                                    'buttons' => [
+                                        'edit' => function ($url, $model3) {
+                                            return Html::a('<i class="fa fa-edit"></i>', 
+                                                    $url,['value'=>Url::to(['ims-purchase-order/update','id'=>$model3->ims_purchaseId]),'title'=> Yii::t('app','Edit'),'class'=>'btn btn-circle btn-icon-only purple modalInvoiceedititem']);
+
+                                        },
+                                        'delete' => function ($url, $model3) {
+                                            return Html::a('<i class="fa fa-times"></i>', 
+                                                    $url,['value'=>Url::to(['ims-purchase-order/confirmdelete','id'=>$model3->ims_purchaseId]),'title'=> Yii::t('app','delete'),'class'=>'btn btn-circle btn-icon-only red modalInvoicedeleteitem']);
+                                            
+                                        },
+
+                                    ],
+                                    'urlCreator' => function ($action, $model_answer, $key, $index) {
+                                        if ($action === 'edit') {
+                                            $url = FALSE;
+                                            return $url;
+                                        }
+                                        if ($action === 'delete') {
+                                            $url = FALSE;
+                                            return $url;
+                                        }
+
+                                    }
+                                ],
+                        ],
+                        'tableOptions' =>['class' => 'table table-striped table-hover'],
+
+            ]); ?>
+        <?php }?>         
         </div>
     </div>
     <div class="row">
@@ -166,6 +260,7 @@ use yii\grid\GridView;
             
 <?php if($model->ims_statusOrder == "") {?>
             <?= Html::a('Save Your Invoice<i class="fa fa-check"></i>', ['ims-purchase-order/saveinvoice','id'=>$model->ims_invoicePurchaseno], ['class' => 'btn btn-lg green-meadow hidden-print margin-bottom-5']) ?>
+            <?= Html::a('Cancel<i class="fa fa-times"></i>', ['ims-purchase-order/cancelorder','id'=>$model->ims_invoicePurchaseno], ['class' => 'btn btn-lg red hidden-print margin-bottom-5']) ?>
             <a class="btn btn-lg blue hidden-print margin-bottom-5" onclick="javascript:window.print();"> Print
                 <i class="fa fa-print"></i>
             </a>

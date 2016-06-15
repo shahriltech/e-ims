@@ -6,13 +6,15 @@ e-Inventory System
 - Refer to the README before start your system.
 - Delete all table in e-ims database then import dump sql file table into e-ims database. All dumpfile mysql can get at db folder.
 
-UPDATE 22/03/2016
+CHANGELOG 15/06/2016
 -------------------
-- Add new 3rd party packages in vendor folder
-- Add dashboard page
-- Add new features at admin page like notification bar, badge beside submenu, purchase order approval
-- Add jquery waypoint and counterup
-- Edit `js/extra.js`
+
+- Add send email to vendor after make the order or admin make the order.
+- Add kartik-mpdf
+- Add new features for access control filter
+- Fixed bugs purchase by admin
+- Fixed bugs for count total order by staff
+- Fixed bugs for UI invoice
 
 DIRECTORY STRUCTURE
 -------------------

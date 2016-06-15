@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 23, 2016 at 02:23 AM
+-- Generation Time: Jun 15, 2016 at 09:38 PM
 -- Server version: 5.5.43-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS `ims_passwordReference` (
   `ims_passrefId` int(11) NOT NULL AUTO_INCREMENT,
   `ims_password` varchar(20) DEFAULT NULL,
   `ims_userid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ims_passrefId`)
+  PRIMARY KEY (`ims_passrefId`),
+  KEY `ims_userid` (`ims_userid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
@@ -84,7 +85,9 @@ CREATE TABLE IF NOT EXISTS `ims_product` (
   `ims_supplierId` int(11) DEFAULT NULL,
   `ims_barcodeProduct` varchar(50) DEFAULT NULL,
   `ims_dateCreate` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`ims_productId`)
+  PRIMARY KEY (`ims_productId`),
+  KEY `ims_categoryId` (`ims_categoryId`),
+  KEY `ims_supplierId` (`ims_supplierId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=39 ;
 
 --
@@ -147,24 +150,33 @@ CREATE TABLE IF NOT EXISTS `ims_purchaseOrder` (
   `ims_purchaseDate` varchar(50) DEFAULT NULL,
   `ims_invoicePurchaseno` varchar(20) DEFAULT NULL,
   `ims_statusOrder` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ims_purchaseId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
+  PRIMARY KEY (`ims_purchaseId`),
+  KEY `ims_orderBy` (`ims_orderBy`),
+  KEY `ims_supplierId` (`ims_supplierId`),
+  KEY `ims_productId` (`ims_productId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=35 ;
 
 --
 -- Dumping data for table `ims_purchaseOrder`
 --
 
 INSERT INTO `ims_purchaseOrder` (`ims_purchaseId`, `ims_supplierId`, `ims_productId`, `ims_productQty`, `ims_productTotalprice`, `ims_orderBy`, `ims_purchaseDate`, `ims_invoicePurchaseno`, `ims_statusOrder`) VALUES
-(1, 5, 3, 2, 6.00, 7, '08 May 2016', '7519063', 'Pending'),
+(1, 5, 3, 3, 9.00, 7, '08 May 2016', '7519063', 'Approved'),
 (6, 7, 37, 5, 7.50, 7, '08 May 2016', '8041269', 'Approved'),
 (9, 5, 13, 3, 9.30, 7, '09 May 2016', '6831549', 'Approved'),
 (10, 7, 38, 6, 9.00, 7, '20 May 2016', '8790165', 'Approved'),
 (11, 7, 19, 6, 36.00, 7, '20 May 2016', '8790165', 'Approved'),
-(14, 5, 10, 3, 5.40, 7, '21 May 2016', '2658341', 'Approved'),
-(15, 5, 6, 4, 18.00, 7, '21 May 2016', '2658341', 'Approved'),
-(16, 5, 16, 2, 5.40, 9, '21 May 2016', '2658341', 'Pending'),
-(17, 5, 7, 5, 20.00, 7, '21 May 2016', '9412603', 'Pending'),
-(18, 5, 14, 1, 5.50, 9, '21 May 2016', '9412603', 'Pending');
+(19, 5, 13, 1, 3.10, 7, '05 June 2016', '1407285', 'Approved'),
+(21, 5, 9, 2, 11.00, 4, '11 June 2016', '8942537', 'Approved'),
+(22, 5, 13, 2, 6.20, 4, '11 June 2016', '1304785', 'Approved'),
+(23, 5, 17, 5, 18.00, 4, '11 June 2016', '1304785', 'Approved'),
+(28, 3, 1, 5, 5.00, 7, '12 June 2016', '0485926', 'Approved'),
+(29, 3, 2, 5, 5.00, 7, '12 June 2016', '0485926', 'Approved'),
+(30, 5, 14, 1, 5.50, 4, '15 June 2016', '2184036', 'Approved'),
+(31, 7, 37, 2, 3.00, 4, '15 June 2016', '1265039', 'Approved'),
+(32, 7, 35, 2, 3.60, 4, '15 June 2016', '1265039', 'Approved'),
+(33, 7, 25, 3, 25.50, 9, '15 June 2016', '9648307', 'Approved'),
+(34, 7, 20, 5, 30.00, 9, '15 June 2016', '9648307', 'Approved');
 
 -- --------------------------------------------------------
 
@@ -182,7 +194,9 @@ CREATE TABLE IF NOT EXISTS `ims_receiveProduct` (
   `ims_productDesc` varchar(100) DEFAULT NULL,
   `ims_receiveBy` int(11) DEFAULT NULL,
   `ims_dateCreate` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `ims_productId` (`ims_productId`),
+  KEY `ims_receiveBy` (`ims_receiveBy`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
@@ -270,7 +284,8 @@ CREATE TABLE IF NOT EXISTS `ims_user` (
   `auth_key` varchar(50) DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT '10',
   `email` varchar(250) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `role` (`role`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
@@ -281,6 +296,44 @@ INSERT INTO `ims_user` (`id`, `ims_fname`, `ims_address`, `ims_phone`, `role`, `
 (4, 'shahril', 'shah alam', '0195676442', 1, 'shahril9', '$2y$13$57p13OMo/cZw6iVmSM4c/OeenhwJnKqcYusvRKOnUi9eF29wbVswu', 'wjOiM_b1gPfoVxqh0XAvYvMV870tcYOt', 10, 'silenttech9@gmail.com'),
 (7, 'Muhammad Hariz Bin Zubair', 'Sitiwan, Perak', '019123456', 2, 'hariz', '$2y$13$NBWAlZCZ5b2Ky6GmdzEBdumPZud.z31mFeuZ457kGdjem2gAiPB7W', 'OAc6bsgTZZYo7Dzeg6J2w3go8HkoBzcW', 10, 'hariz@gmail.com'),
 (9, 'Muhamad Farid Bin Fariz', 'Tambun Ipoh, \r\nPerak', '0124122313', 2, 'farid', '$2y$13$vwNhirU7ReA4cp.UVMDscOzV7O.H7KaQZUNwTLKBck4z.ENQi7wKq', 'xOWYTEhoO94tKJBb36bZpjD0PSgBWn3U', 10, 'farid@gmai.com');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `ims_passwordReference`
+--
+ALTER TABLE `ims_passwordReference`
+  ADD CONSTRAINT `ims_passwordReference_ibfk_1` FOREIGN KEY (`ims_userid`) REFERENCES `ims_user` (`id`);
+
+--
+-- Constraints for table `ims_product`
+--
+ALTER TABLE `ims_product`
+  ADD CONSTRAINT `ims_product_ibfk_1` FOREIGN KEY (`ims_categoryId`) REFERENCES `ims_category` (`ims_categoryId`),
+  ADD CONSTRAINT `ims_product_ibfk_2` FOREIGN KEY (`ims_supplierId`) REFERENCES `ims_supplier` (`ims_supplierId`);
+
+--
+-- Constraints for table `ims_purchaseOrder`
+--
+ALTER TABLE `ims_purchaseOrder`
+  ADD CONSTRAINT `ims_purchaseOrder_ibfk_1` FOREIGN KEY (`ims_orderBy`) REFERENCES `ims_user` (`id`),
+  ADD CONSTRAINT `ims_purchaseOrder_ibfk_2` FOREIGN KEY (`ims_supplierId`) REFERENCES `ims_supplier` (`ims_supplierId`),
+  ADD CONSTRAINT `ims_purchaseOrder_ibfk_3` FOREIGN KEY (`ims_productId`) REFERENCES `ims_product` (`ims_productId`);
+
+--
+-- Constraints for table `ims_receiveProduct`
+--
+ALTER TABLE `ims_receiveProduct`
+  ADD CONSTRAINT `ims_receiveProduct_ibfk_1` FOREIGN KEY (`ims_productId`) REFERENCES `ims_product` (`ims_productId`),
+  ADD CONSTRAINT `ims_receiveProduct_ibfk_2` FOREIGN KEY (`ims_receiveBy`) REFERENCES `ims_user` (`id`);
+
+--
+-- Constraints for table `ims_user`
+--
+ALTER TABLE `ims_user`
+  ADD CONSTRAINT `ims_user_ibfk_1` FOREIGN KEY (`role`) REFERENCES `ims_role` (`ims_roleId`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

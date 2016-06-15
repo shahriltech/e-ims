@@ -19,6 +19,10 @@ $this->params['breadcrumbs'][] = 'Update';
                 <i class="fa fa-circle"></i>
         </li>
         <li>
+            <?= Html::a('Manage Category', ['ims-category/index']) ?>
+                <i class="fa fa-circle"></i>
+        </li>
+        <li>
             <span>Update Category</span>
         </li>
     </ul>

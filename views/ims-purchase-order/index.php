@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <i class="fa fa-circle"></i>
         </li>
         <li>
-            <?= Html::a('Menu Inventory', ['ims-purchase-order/index']) ?>
+            <?= Html::a('Menu Inventory', ['ims-product/menubox']) ?>
                 <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -32,13 +32,19 @@ $this->params['breadcrumbs'][] = $this->title;
 <!-- BEGIN PAGE TITLE-->
     <h3 class="page-title">
     </h3>
+<?php if(Yii::$app->session->hasFlash('submitted')):?>
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert"></button>
+                 <?php echo  Yii::$app->session->getFlash('submitted'); ?>
+            </div>
+<?php endif; ?>
     <!-- END PAGE TITLE-->
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light bordered">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="fa fa-users"></i>History Order
+                    <i class="fa fa-history"></i>History Order
                 </div>
             </div>
             <div class="portlet-body">
@@ -65,6 +71,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'attribute' => 'Supplier/Vendor Name',
                                 'value' => 'ims_supplierName' 
+                            ],
+                            [
+                                'attribute' => 'Status',
+                                'value' => 'ims_statusOrder',
+                                
                             ],
                             [
                                 'header' => 'Action',

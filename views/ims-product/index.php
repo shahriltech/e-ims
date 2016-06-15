@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="portlet light bordered">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="fa fa-users"></i>Product Listing
+                    <i class="fa fa-database"></i>Product Listing
                 </div>
                 <div class="actions">
                     <?= Html::a('<i class="fa fa-plus"></i><span class="hidden-xs">Add Product </span>', ['create'], ['class' => 'btn btn-success']) ?>
@@ -65,13 +65,34 @@ $this->params['breadcrumbs'][] = $this->title;
                             'ims_productName',
                             'ims_productPrice',
                             'category.ims_categoryName',
-                            'ims_totalProductQty',
-                            
-                            // 'ims_supplierId',
-                            // 'ims_barcodeProduct',
+                            //'ims_totalProductQty',
+                            [
+                                'attribute' => 'Total Quantity',
+                                'value' => 'ims_totalProductQty'
+                            ],
+                            [
+                                'header' => 'Action',
+                                'class' => 'yii\grid\ActionColumn',
+                                'template'=>'{view} {update} {delete}',
+                                    'buttons' => [
+                                        'view' => function ($url, $model) {
+                                        return Html::a('<i class="glyphicon glyphicon-eye-open"></i>', 
+                                            $url,['title'=> Yii::t('app','View'),'class'=>'btn btn-circle btn-icon-only default']);
 
-                            ['class' => 'yii\grid\ActionColumn'],
+                                        },
+                                        'update' => function ($url) {
+                                            return Html::a('<i class="glyphicon glyphicon-pencil"></i>', 
+                                                $url,['title'=> Yii::t('app','Update'),'class'=>'btn btn-circle btn-icon-only blue']);
+                                        },
+                                        'delete' => function ($url) {
+                                            return Html::a('<i class="glyphicon glyphicon-trash"></i>', 
+                                                $url,['title'=> Yii::t('app','Delete'),'class'=>'btn btn-circle btn-icon-only red','data-confirm'=>"Are You Sure ?",'data-method' => 'post']);
+                                        },
+
+                                    ],
+                            ],
                         ],
+                        'tableOptions' =>['class' => 'table table-hover'],
                     ]); ?>
                 </div>
 

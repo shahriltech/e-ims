@@ -62,19 +62,4 @@ use yii\grid\GridView;
             <?= Html::a('View More<i class="m-icon-swapright m-icon-white"></i>', ['ims-purchase-order/index'],['class'=>'more']) ?>
         </div>
     </div>
-    <div class="col-lg-4 col-md-3 col-sm-6 col-xs-12">
-        <div class="dashboard-stat green">
-            <div class="visual">
-                <i class="fa fa-eye"></i>
-            </div>
-            <div class="details">
-                <div class="number">
-                    <span>New Product</span>
-                </div>
-            </div>
-            <a class="more" href="javascript:;"> View more
-                <i class="m-icon-swapright m-icon-white"></i>
-            </a>
-        </div>
-    </div>
 </div>

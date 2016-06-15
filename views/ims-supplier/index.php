@@ -57,9 +57,29 @@ $this->params['breadcrumbs'][] = $this->title;
                             //'ims_supplierPhone',
                             //'ims_supplierAddress',
                             'ims_supplierEmail:email',
+                            [
+                                'header' => 'Action',
+                                'class' => 'yii\grid\ActionColumn',
+                                'template'=>'{view} {update} {delete}',
+                                    'buttons' => [
+                                        'view' => function ($url, $model) {
+                                        return Html::a('<i class="glyphicon glyphicon-eye-open"></i>', 
+                                            $url,['title'=> Yii::t('app','View'),'class'=>'btn btn-circle btn-icon-only default']);
 
-                            ['class' => 'yii\grid\ActionColumn'],
+                                        },
+                                        'update' => function ($url) {
+                                            return Html::a('<i class="glyphicon glyphicon-pencil"></i>', 
+                                                $url,['title'=> Yii::t('app','Update'),'class'=>'btn btn-circle btn-icon-only blue']);
+                                        },
+                                        'delete' => function ($url) {
+                                            return Html::a('<i class="glyphicon glyphicon-trash"></i>', 
+                                                $url,['title'=> Yii::t('app','Delete'),'class'=>'btn btn-circle btn-icon-only red','data-confirm'=>"Are You Sure ?",'data-method' => 'post']);
+                                        },
+
+                                    ],
+                            ],
                         ],
+                        'tableOptions' =>['class' => 'table table-hover'],
                     ]); ?>
                     <?php Pjax::end(); ?>
                 </div>

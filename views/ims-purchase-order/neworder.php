@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Manage User</span>
+            <span>Manage order</span>
         </li>
     </ul>
 </div>
@@ -50,7 +50,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     <i class="fa fa-list-ul"></i>Pending Order
                 </div>
                 <div class="actions">
+                    <?php if(Yii::$app->user->identity->role == 1){ ?>
+                        <?= Html::a('<i class="fa fa-plus"></i><span class="hidden-xs">Add Order </span>', ['adminorder'], ['class' => 'btn btn-success']) ?>
+                    <?php }else{?>?
                     <?= Html::a('<i class="fa fa-plus"></i><span class="hidden-xs">Add Order </span>', ['create'], ['class' => 'btn btn-success']) ?>
+                    <?php }?>
                 </div>
             </div>
             <div class="portlet-body">
@@ -115,7 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         }
 
                                     }*/
-                                ],
+                            ],
                             //['class' => 'yii\grid\ActionColumn'],
                         ],
 

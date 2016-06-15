@@ -56,10 +56,30 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'yii\grid\SerialColumn'],
 
                             'ims_categoryName',
-                            'ims_categoryDesc',
+                            [
+                             'attribute' => 'Category Description',
+                             'value' => 'ims_categoryDesc',
+                             'contentOptions' => ['style' => 'width:600px;'],
+                            ],
+                            [
+                                'header' => 'Action',
+                                'class' => 'yii\grid\ActionColumn',
+                                'template'=>'{update} {delete}',
+                                    'buttons' => [
+                                        'update' => function ($url) {
+                                            return Html::a('<i class="glyphicon glyphicon-pencil"></i>', 
+                                                $url,['title'=> Yii::t('app','Update'),'class'=>'btn btn-circle btn-icon-only blue']);
+                                        },
+                                        'delete' => function ($url) {
+                                            return Html::a('<i class="glyphicon glyphicon-trash"></i>', 
+                                                $url,['title'=> Yii::t('app','Delete'),'class'=>'btn btn-circle btn-icon-only red','data-confirm'=>"Are You Sure ?",'data-method' => 'post']);
+                                        },
 
-                            ['class' => 'yii\grid\ActionColumn'],
+                                    ],
+                            ],
                         ],
+                        //'contentOptions' => ['style' => 'width:100px;'],
+                        'tableOptions' =>['class' => 'table table-hover'],
                     ]); ?>
                 </div>
             </div>

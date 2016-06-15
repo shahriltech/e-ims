@@ -171,7 +171,8 @@ use yii\grid\GridView;
             </a>
 <?php }else{ ?>
            <?= Html::a('<i class="fa fa-hand-o-left"></i>Back', ['ims-purchase-order/neworder'], ['class' => 'btn dark btn-outline btn-lg hidden-print margin-bottom-5']) ?>
-           <?= Html::a('<i class="fa fa-check"></i>Approved', ['ims-purchase-order/approve','id'=>$model->ims_invoicePurchaseno], ['class' => 'btn green-meadow btn-lg hidden-print margin-bottom-5']) ?>
+           <?= Html::a('<i class="fa fa-check"></i>Approve & Submit', ['ims-purchase-order/approve','id'=>$model->ims_invoicePurchaseno], ['class' => 'btn green-meadow btn-lg hidden-print margin-bottom-5']) ?>
+           <?= Html::a('Cancel<i class="fa fa-times"></i>', ['ims-purchase-order/cancelorder','id'=>$model->ims_invoicePurchaseno], ['class' => 'btn btn-lg red hidden-print margin-bottom-5']) ?>
            <a class="btn btn-lg blue hidden-print margin-bottom-5" onclick="javascript:window.print();"> Print
                 <i class="fa fa-print"></i>
             </a>

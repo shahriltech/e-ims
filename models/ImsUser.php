@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\ImsRole;
 /**
  * This is the model class for table "ims_user".
  *
@@ -65,5 +65,9 @@ class ImsUser extends \yii\db\ActiveRecord
             'status' => 'Status',
             'email' => 'Email',
         ];
+    }
+    public function getRolename()
+    {
+        return $this->hasOne(ImsRole::className(),['ims_roleId' =>'role']);
     }
 }

@@ -13,7 +13,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <?= Html::a('Home', ['ims-user/index']) ?>
+            <?= Html::a('Home', ['site/index']) ?>
+                <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <?= Html::a('Manage Users', ['ims-user/index']) ?>
                 <i class="fa fa-circle"></i>
         </li>
         <li>

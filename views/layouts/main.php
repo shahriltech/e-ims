@@ -169,8 +169,9 @@ AppAsset::register($this);
                                     'items' => [
                                         ['label' => '<i class="icon-graph"></i>Product', 'url' => ['ims-product/index'],'options'=>['id'=>'prodStorage']],
                                         ['label' => '<i class="icon-basket"></i><span class="title">Purchase</span>'.$s,
-
-                                         'url' => ['ims-purchase-order/neworder'],'options'=>['id'=>'order']],
+                                            'url' => ['ims-purchase-order/neworder'],'options'=>['id'=>'order']
+                                        ],
+                                        ['label' => '<i class="fa fa-history"></i>History Order', 'url' => ['ims-purchase-order/historyorder'],'options'=>['id'=>'historyorder']],
                                     ],
                                     'itemOptions'=>array( 'class'=>'nav-item'),
                                     'options'=>['id'=>'inventoryManagement']
